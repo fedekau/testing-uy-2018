@@ -21,4 +21,4 @@ host=$2
 key_file=$3
 
 bash_test "Testing if ssh port (22) is open" nmap $host -v0 -PN -p ssh
-bash_test "Testing if connection can be stablished" ssh -o ConnectTimeout=10 -i $3 -q $1@$2 exit
+bash_test "Testing if connection can be stablished" ssh -o ConnectTimeout=10 -i $key_file -q $user@$host exit
