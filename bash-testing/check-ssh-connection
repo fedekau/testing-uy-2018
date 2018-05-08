@@ -1,13 +1,24 @@
 #!/usr/bin/env bash -eo pipefail
 
+# Usage example: ./bash-testing/check-ssh-connection federico example.com ~/.ssh/id_rsa_federico_wyeworks | tee /dev/tty | grep "FAIL" | wc -l
+
+function bash_test() {
+  RED='\033[0;31m'
+  GREEN='\033[0;32m'
+  NC='\033[0m'
+
+  echo -ne "${NC}$1"
+
+  if `${@:2}`; then
+    echo -e " -> ${GREEN}OK"
+  else
+    echo -e " -> ${RED}FAIL"
+  fi
+}
+
 user=$1
 host=$2
 key_file=$3
 
-echo -n "Testing if port is open"
-nmap $host -v0 -PN -p ssh
-echo " -> OK"
-
-echo -n "Testing if connection can be stablished"
-ssh -o ConnectTimeout=10 -i $3 -q $1@$2 exit
-echo " -> OK"
+bash_test "Testing if ssh port (22) is open" nmap $host -v0 -PN -p ssh
+bash_test "Testing if connection can be stablished" ssh -o ConnectTimeout=10 -i $3 -q $1@$2 exit
