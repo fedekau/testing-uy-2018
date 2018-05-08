@@ -1,0 +1,13 @@
+#!/usr/bin/env bash -eo pipefail
+
+user=$1
+host=$2
+key_file=$3
+
+echo -n "Testing if port is open"
+nmap $host -v0 -PN -p ssh
+echo " -> OK"
+
+echo -n "Testing if connection can be stablished"
+ssh -o ConnectTimeout=10 -i $3 -q $1@$2 exit
+echo " -> OK"
