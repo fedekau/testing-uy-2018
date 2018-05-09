@@ -1,0 +1,10 @@
+#!/usr/bin/env bash -eo pipefail
+# ./example-1-test-ssh-port/simple-ssh-test federico example.com ~/.ssh/id_rsa_federico_wyeworks
+
+user=$1
+host=$2
+key_file=$3
+
+ssh -o BatchMode=yes -o ConnectTimeout=10 -i "$key_file" -q "$user"@"$host" exit
+exit $?
+

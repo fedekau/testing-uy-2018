@@ -1,7 +1,7 @@
 #!/usr/bin/env bash -eo pipefail
 
 # Usage example:
-# ./bash-testing/check-ssh-connection federico example.com ~/.ssh/id_rsa_federico_wyeworks | tee /dev/tty | grep "FAIL" | wc -l
+# ./example-1-test-ssh-port/complex-ssh-test federico example.com ~/.ssh/id_rsa_federico_wyeworks | tee /dev/tty | grep "FAIL" | wc -l
 
 function bash_test() {
   RED='\033[0;31m'
