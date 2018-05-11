@@ -1,0 +1,9 @@
+---
+username: kitchen
+ssh_key: "/Users/federico/fedekau/testing-uy-2018/example-2-local-and-remote-test/.kitchen/docker_id_rsa"
+image_id: 7a304cd72ad2
+container_id: e86ffa1be475ec26757d64aad6ba5845bbe4e15c70f544829990b0431455f968
+hostname: localhost
+port: 32771
+last_action: setup
+last_error: Kitchen::ActionFailed

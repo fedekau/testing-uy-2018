@@ -10,5 +10,5 @@
     apt:
       name: nginx
       state: latest
-  # - name: Start nginx
-  #   service: name=nginx state=started enabled=yes
+  - name: Start nginx
+    service: name=nginx state=started enabled=yes

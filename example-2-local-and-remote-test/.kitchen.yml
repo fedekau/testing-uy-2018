@@ -1,6 +1,9 @@
 ---
+# driver:
+#   name: vagrant
 driver:
-  name: vagrant
+  name: docker
+  use_sudo: false
 
 provisioner:
   hosts: all
@@ -18,6 +21,7 @@ verifier:
 
 platforms:
   - name: ubuntu-14.04
+  # - name: ubuntu-18.04
 
 suites:
   - name: specs
