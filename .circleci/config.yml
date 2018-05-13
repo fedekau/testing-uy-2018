@@ -70,6 +70,9 @@ jobs:
       - *restore_dependencies
       - *bundle_install
       - run:
+          name: Setup test-kitchen
+          command: .circleci/kitchen/setup
+      - run:
           name: Run integration tests on AWS
           command: bundle exec kitchen test
 
