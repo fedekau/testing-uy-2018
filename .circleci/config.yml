@@ -58,6 +58,7 @@ jobs:
 
   integration:
     <<: *default_config
+    parallelism: 2
     steps:
       - *restore_repo
       - *restore_dependencies
@@ -67,7 +68,11 @@ jobs:
           command: .circleci/kitchen/setup
       - run:
           name: Run integration tests on AWS
-          command: bundle exec kitchen test --concurrency
+          command: |
+            SUITE_NUMBER=$((CIRCLE_NODE_INDEX + 1))
+
+            SUITE_NAME=$(bundle exec kitchen list -b | sed -n "$SUITE_NUMBER""p")
+            bundle exec kitchen test "$SUITE_NAME"
 
 workflows:
   version: 2
