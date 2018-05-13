@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 title 'nginx'
 
 # you can also use plain tests
