@@ -1,21 +1,24 @@
+# frozen_string_literal: true
+
+ruby '2.5.1'
 
 source 'https://rubygems.org'
 
 gem 'inspec'
 
 group :test do
-  gem 'bundler', '~> 1.5'
-  gem 'minitest', '~> 5.5'
-  gem 'rake', '~> 10'
+  gem 'bundler'
+  gem 'minitest'
+  gem 'rake'
   gem 'rubocop'
-  gem 'simplecov', '~> 0.10'
+  gem 'simplecov'
 end
 
 group :integration do
-  gem 'concurrent-ruby', '~> 1.0'
+  gem 'concurrent-ruby'
   gem 'kitchen-ansible'
   gem 'kitchen-docker'
   gem 'kitchen-ec2'
   gem 'kitchen-inspec'
-  gem 'test-kitchen', '~> 1.4'
+  gem 'test-kitchen'
 end
