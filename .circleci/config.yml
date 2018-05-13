@@ -1,56 +1,83 @@
 version: 2
+references:
+
+base_image: &base_image
+  circleci/ruby:2.5.1
+
+working_directory: &working_directory
+  ~/example
+
+default_config: &default_config
+  docker:
+    - image: *base_image
+  working_directory: *working_directory
+
+repo_cache_key: &repo_cache_key
+  v1-repo-{{ .Branch }}-{{ .Revision }}
+
+# Step to restore repository from cache
+restore_repo: &restore_repo
+  restore_cache:
+    key: *repo_cache_key
+
+save_repo: &save_repo
+  save_cache:
+    key: *repo_cache_key
+    paths:
+      - *working_directory
+
+restore_dependencies: &restore_dependencies
+  restore_cache:
+    keys:
+      - v1-dependencies-{{ checksum "Gemfile.lock" }}
+      - v1-dependencies-
+
+save_dependencies: &save_dependencies
+  save_cache:
+    paths:
+      - ./vendor/bundle
+    key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+
+bundle_install: &bundle_install
+  run:
+    name: Install bundle dependencies
+    command: bundle install --jobs=4 --retry=3 --path vendor/bundle
+
 jobs:
-  build:
-    docker:
-        - image: circleci/ruby:2.4.1-node-browsers
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
-    working_directory: ~/repo
-
+  unit:
+    <<: *default_config
     steps:
+      - *restore_repo
+      - *restore_dependencies
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "Gemfile.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
+      - *bundle_install
+      - *save_dependencies
+      - *save_repo
       - run:
-          name: install dependencies
-          command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
-
-      - save_cache:
+          name: Rubocop
+          command: bundle exec rubocop
+      - persist_to_workspace:
+          root: *working_directory
           paths:
-            - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - .
 
-      # Database setup
-      - run: bundle exec rake db:create
-      - run: bundle exec rake db:schema:load
-
-      # run tests!
+  integration:
+    <<: *default_config
+    steps:
+      - attach_workspace:
+          at: *working_directory
+      - *restore_repo
+      - *restore_dependencies
+      - *bundle_install
       - run:
-          name: run tests
-          command: |
-            mkdir /tmp/test-results
-            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+          name: Run integration tests on AWS
+          command: bundle exec kitchen test
 
-            bundle exec rspec --format progress \
-                            --format RspecJunitFormatter \
-                            --out /tmp/test-results/rspec.xml \
-                            --format progress \
-                            $TEST_FILES
-
-      # collect reports
-      - store_test_results:
-          path: /tmp/test-results
-      - store_artifacts:
-          path: /tmp/test-results
-          destination: test-results
+workflows:
+  version: 2
+  unit_and_integration:
+    jobs:
+      - unit
+      - integration:
+          requires:
+            - unit
