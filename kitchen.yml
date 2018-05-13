@@ -1,0 +1,25 @@
+---
+driver:
+  name: docker
+  use_sudo: false
+  provision_command: mkdir -p /run/sshd
+
+provisioner:
+  hosts: all
+  name: ansible_playbook
+  playbook: ansible/webservers.yml
+  require_chef_for_busser: false
+  require_ruby_for_busser: false
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: ubuntu-14.04
+  - name: ubuntu-18.04
+
+suites:
+  - name: integration
+    verifier:
+      inspec_tests:
+        - spec/integration
