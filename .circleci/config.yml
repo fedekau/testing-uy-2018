@@ -56,9 +56,8 @@ jobs:
           name: Rubocop
           command: bundle exec rubocop
 
-  integration:
+  integration-ubuntu-1804:
     <<: *default_config
-    parallelism: 2
     steps:
       - *restore_repo
       - *restore_dependencies
@@ -69,9 +68,22 @@ jobs:
       - run:
           name: Run integration tests on AWS
           command: |
-            SUITE_NUMBER=$((CIRCLE_NODE_INDEX + 1))
+            SUITE_NAME=$(bundle exec kitchen list -b | grep 1804)
+            bundle exec kitchen test "$SUITE_NAME"
 
-            SUITE_NAME=$(bundle exec kitchen list -b | sed -n "$SUITE_NUMBER""p")
+  integration-ubuntu-1404:
+    <<: *default_config
+    steps:
+      - *restore_repo
+      - *restore_dependencies
+      - *bundle_install
+      - run:
+          name: Setup test-kitchen
+          command: .circleci/kitchen/setup
+      - run:
+          name: Run integration tests on AWS
+          command: |
+            SUITE_NAME=$(bundle exec kitchen list -b | grep 1404)
             bundle exec kitchen test "$SUITE_NAME"
 
 workflows:
@@ -79,6 +91,9 @@ workflows:
   unit_and_integration:
     jobs:
       - unit
-      - integration:
+      - integration-ubuntu-1404:
+          requires:
+            - unit
+      - integration-ubuntu-1804:
           requires:
             - unit
