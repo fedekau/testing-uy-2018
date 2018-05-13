@@ -47,25 +47,18 @@ jobs:
   unit:
     <<: *default_config
     steps:
-      - *restore_repo
-      - *restore_dependencies
       - checkout
+      - *restore_dependencies
       - *bundle_install
       - *save_dependencies
       - *save_repo
       - run:
           name: Rubocop
           command: bundle exec rubocop
-      - persist_to_workspace:
-          root: *working_directory
-          paths:
-            - .
 
   integration:
     <<: *default_config
     steps:
-      - attach_workspace:
-          at: *working_directory
       - *restore_repo
       - *restore_dependencies
       - *bundle_install
