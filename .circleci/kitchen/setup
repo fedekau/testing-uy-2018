@@ -2,7 +2,7 @@
 
 PROJECT_PATH=$(git rev-parse --show-toplevel)
 
-[ "$CIRCLECI" = true ]; then
+if [ "$CIRCLECI" = true ]; then
   sed -i.bak 's/use_sudo: false//g' "$PROJECT_PATH/kitchen.yml"
   sed -i.bak 's/name: docker/name: ec2/g' "$PROJECT_PATH/kitchen.yml"
   sed -i.bak 's/provision_command: mkdir -p \/run\/sshd//g' "$PROJECT_PATH/kitchen.yml"
