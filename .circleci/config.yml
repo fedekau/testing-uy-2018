@@ -67,7 +67,7 @@ jobs:
           command: .circleci/kitchen/setup
       - run:
           name: Run integration tests on AWS
-          command: bundle exec kitchen test
+          command: bundle exec kitchen test --concurrency
 
 workflows:
   version: 2
