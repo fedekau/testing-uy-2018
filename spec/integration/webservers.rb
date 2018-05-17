@@ -2,7 +2,6 @@
 
 title 'nginx'
 
-# you can also use plain tests
 describe package('nginx') do
   it { should be_installed }
 end
