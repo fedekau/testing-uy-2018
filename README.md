@@ -1,6 +1,6 @@
 # testing-uy-2018
 
-Repository for the talk "Are you testing you infrastructure?" for the fifth edition of TestingUy conference (May 21st and 22nd, 2018).
+Repository for the talk "Are you testing you infrastructure?" for the fifth edition of TestingUy conference (May 21st and 22nd, 2018). The slides of the talk are [here](https://docs.google.com/presentation/d/1XSPFUhxscA8G37lnf8LFGu3g5IGiAXZzKkpgOrHtoU0/edit#slide=id.g392b0d6e9a_0_0) and the like video in in [youtube here](https://youtu.be/RUyCXov8k78?t=1h3m19s)
 
 ## Requirements
 
